@@ -101,7 +101,7 @@ export function Credits({
 
       // Production mode - integrate with payment processor
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/payments/create-checkout-session?plan=${planId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/payments/create-checkout-session?plan=${planId}`,
         {
           method: 'POST',
           headers: {
