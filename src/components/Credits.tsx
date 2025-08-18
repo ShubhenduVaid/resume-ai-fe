@@ -25,15 +25,15 @@ const creditPlans = [
     id: 'starter',
     name: 'Starter Pack',
     credits: 50,
-    price: '$9.99',
+    price: '$4.99',
     popular: false,
     features: ['50 AI resume edits', 'PDF exports', 'ATS optimization'],
   },
   {
     id: 'professional',
     name: 'Professional',
-    credits: 200,
-    price: '$29.99',
+    credits: 100,
+    price: '$8.99',
     popular: true,
     features: [
       '200 AI resume edits',
@@ -45,11 +45,11 @@ const creditPlans = [
   {
     id: 'enterprise',
     name: 'Enterprise',
-    credits: 500,
-    price: '$59.99',
+    credits: 400,
+    price: '$14.99',
     popular: false,
     features: [
-      '500 AI resume edits',
+      '400 AI resume edits',
       'Team collaboration',
       'Custom templates',
       'API access',
@@ -101,28 +101,24 @@ export function Credits({
 
       // Production mode - integrate with payment processor
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/payments/create-checkout-session`,
+        `${process.env.NEXT_PUBLIC_API_URL}/payments/create-checkout-session?plan=${planId}`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
           },
-          body: JSON.stringify({
-            plan_id: planId,
-            success_url: `${window.location.origin}/payment/success`,
-            cancel_url: `${window.location.origin}/payment/cancel`,
-          }),
         },
       );
 
-      const data = await response.json();
+      const session = await response.json();
 
-      if (data.checkout_url) {
-        // Redirect to payment processor
-        window.location.href = data.checkout_url;
+      if (session.url) {
+        // Redirect the user to the Stripe Checkout page
+        window.location.href = session.url;
       } else {
-        throw new Error('Failed to create checkout session');
+        // Handle error
+        console.error('Could not create Stripe checkout session.');
       }
     } catch (error) {
       console.error('Payment error:', error);
