@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { User, OAuthProvider } from '@/types';
 import { buildOAuthUrl } from '../utils/oauth';
+import { apiService } from '@/lib/api';
 
 interface AuthState {
   user: User | null;
@@ -101,11 +102,16 @@ export function useAuthState(): AuthState {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setUser(null);
     if (typeof window !== 'undefined') {
+      await apiService.logout();
       localStorage.removeItem('resumeBuilder_user');
-      localStorage.removeItem('isGuestSession');
+      localStorage.removeItem('temporaryUserId');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('chatId');
+      typeof window !== 'undefined' && window.location.reload();
     }
     setShowLoginModal(true);
   };
