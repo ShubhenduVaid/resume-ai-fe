@@ -23,6 +23,10 @@ interface RewriteResponse {
   text: string;
 }
 
+interface StripeSessionResponse {
+  url: string;
+}
+
 interface HealthResponse {
   status: string;
   timestamp: string;
@@ -129,6 +133,17 @@ class ApiService {
         refreshToken,
       }),
     });
+  }
+
+  async createCheckoutSession(
+    planId: string,
+  ): Promise<ApiResponse<StripeSessionResponse>> {
+    return this.fetchWithErrorHandling<StripeSessionResponse>(
+      `/api/payments/create-checkout-session?plan=${planId}`,
+      {
+        method: 'POST',
+      },
+    );
   }
 
   async getChatHistory(

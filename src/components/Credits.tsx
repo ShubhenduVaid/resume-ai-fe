@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from './ui/dialog';
 import { Zap, Sparkles, ArrowRight, Check, AlertTriangle } from 'lucide-react';
+import { apiService } from '@/lib/api';
 
 interface CreditsProps {
   creditsRemaining: number;
@@ -100,22 +101,12 @@ export function Credits({
       }
 
       // Production mode - integrate with payment processor
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/payments/create-checkout-session?plan=${planId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-          },
-        },
-      );
+      const response = await apiService.createCheckoutSession(planId);
+      const url = response.data?.url;
 
-      const session = await response.json();
-
-      if (session.url) {
+      if (url) {
         // Redirect the user to the Stripe Checkout page
-        window.location.href = session.url;
+        window.location.href = url;
       } else {
         // Handle error
         console.error('Could not create Stripe checkout session.');
