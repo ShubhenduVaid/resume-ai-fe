@@ -29,9 +29,8 @@ interface HealthResponse {
   geminiConfigured: boolean;
 }
 
-interface SessionResponse {
-  temporaryUserId: string;
-  chatId: string;
+interface LogoutResponse {
+  message: string;
 }
 
 class ApiService {
@@ -89,15 +88,6 @@ class ApiService {
     }
   }
 
-  async startSession(): Promise<ApiResponse<SessionResponse>> {
-    return this.fetchWithErrorHandling<SessionResponse>(
-      '/api/auth/session/start',
-      {
-        method: 'POST',
-      },
-    );
-  }
-
   async bootstrap(temporaryUserId?: string | null): Promise<
     ApiResponse<
       | {
@@ -126,6 +116,19 @@ class ApiService {
       url += `?temporaryUserId=${encodeURIComponent(temporaryUserId)}`;
     }
     return this.fetchWithErrorHandling(url);
+  }
+
+  async logout(): Promise<ApiResponse<LogoutResponse>> {
+    const refreshToken =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('refreshToken')
+        : null;
+    return this.fetchWithErrorHandling<LogoutResponse>('/api/auth/logout', {
+      method: 'POST',
+      body: JSON.stringify({
+        refreshToken,
+      }),
+    });
   }
 
   async getChatHistory(
