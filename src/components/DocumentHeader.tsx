@@ -28,6 +28,7 @@ interface DocumentHeaderProps {
   onCreditsDialogOpenChange?: (open: boolean) => void;
   onOpenLogin?: () => void;
   isGuestSession?: boolean;
+  isBootstrapped?: boolean;
 }
 
 export function DocumentHeader({
@@ -47,6 +48,7 @@ export function DocumentHeader({
   onCreditsDialogOpenChange,
   onOpenLogin,
   isGuestSession = false,
+  isBootstrapped = true,
 }: DocumentHeaderProps) {
   const nextFrame = useCallback(async () => {
     if (
@@ -203,19 +205,21 @@ export function DocumentHeader({
               <span className="hidden xl:inline ml-1.5">Download PDF</span>
             </Button>
 
-            {/* Credits: single instance. Visible on mobile only when out of credits; always visible on md+. */}
-            <div
-              className={`${creditsRemaining === 0 ? 'inline-flex' : 'hidden'} md:flex`}
-            >
-              <Credits
-                creditsRemaining={creditsRemaining}
-                onBuyCredits={onBuyCredits}
-                variant="header"
-                showLabel={creditsRemaining === 0}
-                open={creditsDialogOpen}
-                onOpenChange={onCreditsDialogOpenChange}
-              />
-            </div>
+            {/* Credits: render only after bootstrap completes to avoid flicker */}
+            {isBootstrapped && (
+              <div
+                className={`${creditsRemaining === 0 ? 'inline-flex' : 'hidden'} md:flex`}
+              >
+                <Credits
+                  creditsRemaining={creditsRemaining}
+                  onBuyCredits={onBuyCredits}
+                  variant="header"
+                  showLabel={creditsRemaining === 0}
+                  open={creditsDialogOpen}
+                  onOpenChange={onCreditsDialogOpenChange}
+                />
+              </div>
+            )}
 
             {/* Account */}
             {user && !isGuestSession ? (

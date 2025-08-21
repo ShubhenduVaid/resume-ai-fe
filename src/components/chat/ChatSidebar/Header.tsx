@@ -9,6 +9,7 @@ interface HeaderProps {
   isMobile?: boolean;
   onClose?: () => void;
   onBuyCredits?: () => void;
+  isBootstrapped?: boolean;
 }
 
 export function Header({
@@ -17,9 +18,10 @@ export function Header({
   isMobile = false,
   onClose,
   onBuyCredits,
+  isBootstrapped = true,
 }: HeaderProps) {
-  const isOutOfCredits = creditsRemaining === 0;
-  const isLowCredits = creditsRemaining < 10;
+  const isOutOfCredits = isBootstrapped && creditsRemaining === 0;
+  const isLowCredits = isBootstrapped && creditsRemaining < 10;
 
   return (
     <div className="px-4 py-3 border-b border-gray-100">
@@ -39,7 +41,7 @@ export function Header({
         </div>
 
         <div className="flex items-center gap-2">
-          {onBuyCredits ? (
+          {onBuyCredits && isBootstrapped ? (
             <button
               type="button"
               onClick={onBuyCredits}
@@ -58,7 +60,7 @@ export function Header({
               )}
               <span>{creditsRemaining}</span>
             </button>
-          ) : (
+          ) : isBootstrapped ? (
             <Badge
               className={`font-medium border text-xs px-2 py-1 ${
                 isOutOfCredits
@@ -73,7 +75,7 @@ export function Header({
               )}
               <span>{creditsRemaining}</span>
             </Badge>
-          )}
+          ) : null}
 
           {isMobile && onClose && (
             <Button
@@ -89,11 +91,13 @@ export function Header({
         </div>
       </div>
       <p className="text-xs text-gray-500 mt-1">
-        {isOutOfCredits
-          ? 'No credits remaining — buy more to continue'
-          : isLowCredits
-            ? `Running low on credits (${creditsRemaining} remaining)`
-            : 'Chat to edit your resume naturally'}
+        {isBootstrapped
+          ? isOutOfCredits
+            ? 'No credits remaining — buy more to continue'
+            : isLowCredits
+              ? `Running low on credits (${creditsRemaining} remaining)`
+              : 'Chat to edit your resume naturally'
+          : 'Chat to edit your resume naturally'}
       </p>
     </div>
   );

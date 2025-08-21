@@ -20,6 +20,7 @@ export function ChatSidebar({
   isMobile = false,
   onClose,
   onBuyCredits,
+  isBootstrapped = true,
   pendingFiles = [],
   onRemovePendingFile,
   isEmpty = false,
@@ -46,7 +47,7 @@ export function ChatSidebar({
     }
   };
 
-  const isOutOfCredits = creditsRemaining === 0;
+  const isOutOfCredits = isBootstrapped && creditsRemaining === 0;
   const isLowCredits = creditsRemaining < 10;
 
   return (
@@ -58,6 +59,7 @@ export function ChatSidebar({
         isMobile={isMobile}
         onClose={onClose}
         onBuyCredits={onBuyCredits}
+        isBootstrapped={isBootstrapped}
       />
 
       {/* Messages */}
@@ -104,11 +106,13 @@ export function ChatSidebar({
         />
       )}
 
-      {/* Out of Credits Warning */}
-      <CreditsBanner
-        isOutOfCredits={isOutOfCredits}
-        onBuyCredits={onBuyCredits}
-      />
+      {/* Out of Credits Warning (only after bootstrap to avoid flicker) */}
+      {isBootstrapped && (
+        <CreditsBanner
+          isOutOfCredits={isOutOfCredits}
+          onBuyCredits={onBuyCredits}
+        />
+      )}
 
       {/* Chat Input */}
       <ChatInput

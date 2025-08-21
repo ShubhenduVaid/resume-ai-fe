@@ -51,6 +51,7 @@ interface LayoutState {
 // The complete AppState combines auth, chat, and layout states
 interface AppStateContextValue extends AuthState, ChatState, LayoutState {
   uploadsCfg: UploadsConfig | null;
+  hasBootstrapped: boolean;
 }
 
 const AppStateContext = createContext<AppStateContextValue | undefined>(
@@ -63,6 +64,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const chat = useChat(auth.user);
 
   const [uploadsCfg, setUploadsCfg] = useState<UploadsConfig | null>(null);
+  const [hasBootstrapped, setHasBootstrapped] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -77,7 +79,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
           setDocumentTitle: chat.setDocumentTitle,
         },
         () => mounted,
-      );
+      ).finally(() => {
+        if (mounted) setHasBootstrapped(true);
+      });
 
     runBootstrap();
 
@@ -173,8 +177,11 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
       // Uploads
       uploadsCfg,
+
+      // Bootstrap state
+      hasBootstrapped,
     }),
-    [auth, layout, chat],
+    [auth, layout, chat, hasBootstrapped],
   );
 
   return (

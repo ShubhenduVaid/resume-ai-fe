@@ -45,6 +45,7 @@ export function Workbench() {
     chatInputRef,
     focusChat,
     isProcessing,
+    hasBootstrapped,
   } = useAppState();
   const { user } = useAuth();
   const [creditsDialogOpen, setCreditsDialogOpen] = React.useState(false);
@@ -277,6 +278,7 @@ export function Workbench() {
           setShowLoginModal(true);
         }}
         isGuestSession={isGuestSession}
+        isBootstrapped={hasBootstrapped}
       />
 
       <div className="h-[calc(100dvh-56px)] flex">
@@ -304,6 +306,7 @@ export function Workbench() {
                   creditsRemaining={creditsRemaining}
                   chatInputRef={chatInputRef}
                   isMobile={isMobile || sidebarWidth === 0}
+                  isBootstrapped={hasBootstrapped}
                   onClose={() => setSidebarCollapsed(true)}
                   onBuyCredits={() => setCreditsDialogOpen(true)}
                   pendingFiles={pendingFiles}
@@ -375,6 +378,7 @@ export function Workbench() {
                   creditsRemaining={creditsRemaining}
                   chatInputRef={chatInputRef}
                   isMobile={isMobile}
+                  isBootstrapped={hasBootstrapped}
                   onClose={() => setSidebarCollapsed(true)}
                   onBuyCredits={() => setCreditsDialogOpen(true)}
                   pendingFiles={pendingFiles}

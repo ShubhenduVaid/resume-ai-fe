@@ -29,6 +29,7 @@ export interface ChatSidebarProps {
   isMobile?: boolean;
   onClose?: () => void;
   onBuyCredits?: () => void;
+  isBootstrapped?: boolean;
   pendingFiles?: FileAttachment[];
   onRemovePendingFile?: (fileId: string) => void;
   isEmpty?: boolean;
