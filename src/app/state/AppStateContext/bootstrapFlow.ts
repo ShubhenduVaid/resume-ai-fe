@@ -40,6 +40,9 @@ export async function bootstrapFlow(apply: ApplyFns, isMounted: () => boolean) {
     }
     if (typeof data.credits === 'number') {
       apply.setCreditsRemaining(data.credits);
+      try {
+        localStorage.setItem('creditsRemaining', String(data.credits));
+      } catch {}
     }
     if (data.chatTitle) {
       apply.setDocumentTitle(data.chatTitle);
@@ -82,6 +85,9 @@ export async function bootstrapFlow(apply: ApplyFns, isMounted: () => boolean) {
     localStorage.setItem('chatId', String(data.chatId));
     if (typeof data.credits === 'number') {
       apply.setCreditsRemaining(data.credits);
+      try {
+        localStorage.setItem('creditsRemaining', String(data.credits));
+      } catch {}
     }
     if (data.chatTitle) {
       apply.setDocumentTitle(data.chatTitle);

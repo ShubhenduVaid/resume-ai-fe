@@ -17,6 +17,7 @@ interface ChatResponse {
     reason: string;
   };
   output_resume_markdown: string;
+  credits?: number;
 }
 
 interface RewriteResponse {

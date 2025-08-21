@@ -37,6 +37,20 @@ export function useChat(user: User | null): ChatState {
   const chatInputRef = useRef<HTMLTextAreaElement>(null);
   const prevContentLengthRef = useRef<number>(0);
 
+  // Initialize credits from localStorage if present
+  useEffect(() => {
+    try {
+      const stored =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('creditsRemaining')
+          : null;
+      if (stored != null) {
+        const n = Number(stored);
+        if (!Number.isNaN(n)) setCreditsRemaining(n);
+      }
+    } catch {}
+  }, []);
+
   const checkCredits = useCallback((): boolean => {
     if (creditsRemaining <= 0) {
       setChatHistory((prev) => [
@@ -143,6 +157,10 @@ export function useChat(user: User | null): ChatState {
 
           // Always try backend first; internal heuristics handled inside processAI as fallback
           const result = await processAI(message, attachments);
+          // Sync remaining credits from server if provided
+          if (typeof result.credits === 'number') {
+            setCreditsRemaining(result.credits);
+          }
           updatedMarkdown = result.updatedMarkdown;
           responseMessage = result.responseMessage;
           hasUpdates = result.hasUpdates;

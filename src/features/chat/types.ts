@@ -37,6 +37,7 @@ export interface ProcessingResult {
   updatedMarkdown: string;
   responseMessage: string;
   hasUpdates?: boolean;
+  credits?: number;
 }
 
 /**

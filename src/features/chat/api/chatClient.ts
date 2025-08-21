@@ -13,6 +13,7 @@ export interface ChatApiResult {
   updatedMarkdown: string;
   responseMessage: string;
   hasUpdates?: boolean;
+  credits?: number;
 }
 
 export async function callPrimaryApi(
@@ -33,5 +34,15 @@ export async function callPrimaryApi(
   const updatedMarkdown = hasUpdates
     ? data.output_resume_markdown || markdownContent
     : markdownContent;
-  return { updatedMarkdown, responseMessage, hasUpdates };
+  try {
+    if (typeof window !== 'undefined' && typeof data.credits === 'number') {
+      localStorage.setItem('creditsRemaining', String(data.credits));
+    }
+  } catch {}
+  return {
+    updatedMarkdown,
+    responseMessage,
+    hasUpdates,
+    credits: data.credits,
+  };
 }
