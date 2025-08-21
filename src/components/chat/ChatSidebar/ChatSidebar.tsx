@@ -50,7 +50,7 @@ export function ChatSidebar({
   const isLowCredits = creditsRemaining < 10;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={`flex flex-col h-full ${isMobile ? '' : 'pb-2'}`}>
       {/* Header */}
       <Header
         creditsRemaining={creditsRemaining}

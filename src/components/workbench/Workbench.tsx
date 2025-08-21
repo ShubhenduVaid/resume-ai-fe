@@ -425,28 +425,14 @@ export function Workbench() {
               isMobile={isMobile}
               isEmpty={markdownContent.length === 0}
               hasMessages={chatHistory.length > 0}
+              sidebarCollapsed={sidebarCollapsed}
               onStartFromScratch={() => setMarkdownContent('# Your Name')}
               onClickImportResume={() => {
-                // On mobile/iOS, prefer an immediate, dedicated picker for reliability
-                if (isMobile || sidebarWidth === 0) {
-                  openImmediateFilePicker();
-                  return;
-                }
-                // If ChatSidebar is mounted, use its picker so files land in the chat flow
-                if (chatOpenPickerRef.current) {
-                  chatOpenPickerRef.current();
-                  return;
-                }
-                // Desktop fallback to hidden input
-                if (localPickerRef.current) {
-                  const input = localPickerRef.current;
-                  try {
-                    typeof (input as any).showPicker === 'function'
-                      ? (input as any).showPicker()
-                      : input.click();
-                  } catch {
-                    input.click();
-                  }
+                // Open file picker or show import options
+                if (isMobile) {
+                  // On mobile, open the chat sidebar and let user use the attachment button
+                  setSidebarCollapsed(false);
+                  setTimeout(() => focusChat(), 150);
                 } else {
                   openImmediateFilePicker();
                 }

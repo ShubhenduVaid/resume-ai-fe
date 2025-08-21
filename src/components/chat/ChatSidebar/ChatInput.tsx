@@ -159,6 +159,8 @@ export function ChatInput({
     isMobile && !compact ? 'pb-6' : '',
     // Respect safe area on devices with a home indicator
     'pb-[env(safe-area-inset-bottom)]',
+    // Desktop-only breathing room from bottom edge
+    'md:mb-2',
   ]
     .filter(Boolean)
     .join(' ');

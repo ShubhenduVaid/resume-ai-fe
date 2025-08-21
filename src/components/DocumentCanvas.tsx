@@ -25,6 +25,7 @@ interface DocumentCanvasProps {
   footerSlot?: React.ReactNode;
   onClickImportResume?: () => void;
   onStartChatting?: () => void;
+  sidebarCollapsed?: boolean;
 }
 
 export function DocumentCanvas({
@@ -38,6 +39,7 @@ export function DocumentCanvas({
   footerSlot,
   onClickImportResume,
   onStartChatting,
+  sidebarCollapsed = false,
 }: DocumentCanvasProps) {
   const extensions = useMemo(
     () => [
@@ -53,7 +55,8 @@ export function DocumentCanvas({
           lineHeight: '1.6',
           minHeight: '100%',
           // Reserve space for MiniChat on mobile using CSS var (0px when absent)
-          paddingBottom: isMobile ? 'var(--minichat-height, 0px)' : null,
+          paddingBottom:
+            isMobile && sidebarCollapsed ? 'var(--minichat-height, 0px)' : null,
         },
         '.cm-focused': {
           outline: 'none',
@@ -243,9 +246,10 @@ export function DocumentCanvas({
           <div
             className={`mx-auto ${isMobile ? 'px-4 py-6' : 'px-8 py-12 max-w-4xl'}`}
             style={{
-              paddingBottom: isMobile
-                ? 'var(--minichat-height, 0px)'
-                : undefined,
+              paddingBottom:
+                isMobile && sidebarCollapsed
+                  ? 'var(--minichat-height, 0px)'
+                  : undefined,
             }}
           >
             {/* Document Paper Effect with PDF data attribute */}
