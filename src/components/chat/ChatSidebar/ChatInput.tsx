@@ -79,7 +79,8 @@ export function ChatInput({
     'focus:border-blue-500 focus:ring-1 focus:ring-blue-500',
     'bg-white text-sm rounded-2xl resize-none overflow-y-auto',
     isOutOfCredits || isProcessing ? 'opacity-50 cursor-not-allowed' : '',
-    isMobile ? `${compact ? 'py-3' : 'py-4'} text-base` : '',
+    // On iOS Safari, inputs <16px trigger zoom. Force 16px on mobile.
+    isMobile ? `${compact ? 'py-3' : 'py-4'} text-[16px]` : '',
     pendingFilesCount > 0 ? 'border-blue-300 ring-1 ring-blue-200' : '',
   ]
     .filter(Boolean)
@@ -117,6 +118,8 @@ export function ChatInput({
       ? 'px-1 py-1 border-t-0 bg-transparent'
       : 'px-4 py-4 border-t border-gray-100 bg-white',
     isMobile && !compact ? 'pb-6' : '',
+    // Respect safe area on devices with a home indicator
+    'pb-[env(safe-area-inset-bottom)]',
   ]
     .filter(Boolean)
     .join(' ');
@@ -132,6 +135,9 @@ export function ChatInput({
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={computedPlaceholder}
+            enterKeyHint="send"
+            inputMode="text"
+            autoCapitalize="sentences"
             rows={1}
             className={textareaClass}
             style={{

@@ -279,7 +279,7 @@ export function Workbench() {
         isGuestSession={isGuestSession}
       />
 
-      <div className="h-[calc(100vh-56px)] flex">
+      <div className="h-[calc(100dvh-56px)] flex">
         {/* Sidebar */}
         {isMobile || sidebarWidth === 0 ? (
           !sidebarCollapsed && (
@@ -468,7 +468,19 @@ export function Workbench() {
           </div>
           {/* Inline MiniChat footer (mobile only) */}
           <div className="shrink-0">
-            {(isMobile || sidebarWidth === 0) && <MiniChat />}
+            {(isMobile || sidebarWidth === 0) && (
+              <>
+                {/* Invisible spacer to reserve space for the fixed MiniChat bar */}
+                {!sidebarCollapsed && null}
+                {sidebarCollapsed && (
+                  <div
+                    className="h-[88px] pb-[env(safe-area-inset-bottom)]"
+                    aria-hidden="true"
+                  />
+                )}
+                <MiniChat />
+              </>
+            )}
           </div>
 
           {/* Close document area container */}

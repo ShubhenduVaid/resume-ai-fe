@@ -103,7 +103,29 @@ export function MiniChat() {
     [uploadsCfg, setPendingFiles, focusChat],
   );
 
-  // Inline layout: no fixed footer or visualViewport hacks
+  // Keyboard-safe fixed footer using VisualViewport on iOS
+  const [kbOffset, setKbOffset] = useState(0);
+  useEffect(() => {
+    const vv = (window as any).visualViewport as VisualViewport | undefined;
+    if (!vv) return; // desktop/non-iOS
+    const update = () => {
+      const inset = Math.max(
+        0,
+        window.innerHeight - (vv.height + vv.offsetTop),
+      );
+      // Nudge a little above the URL affordance bubble
+      setKbOffset(inset > 0 ? inset + 8 : 0);
+    };
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    update();
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
+  }, []);
+
+  // Minimize control for compact view
   const [minimized, setMinimized] = useState(false);
 
   // Clamp detection for latest assistant bubble
@@ -133,7 +155,11 @@ export function MiniChat() {
   if (!sidebarCollapsed) return null;
 
   return (
-    <div className="bg-white border-t border-gray-200 rounded-t-lg shadow-sm">
+    <div
+      className="fixed left-0 right-0 z-50 bg-white border-t border-gray-200 rounded-t-lg shadow-sm"
+      // Position above iOS keyboard while respecting safe area
+      style={{ bottom: kbOffset }}
+    >
       {/* Header with controls (top-right) */}
       <div className="flex items-center justify-end px-1.5 py-1">
         <div className="flex items-center gap-0.5">
@@ -205,7 +231,7 @@ export function MiniChat() {
             </div>
           ) : null}
           {/* Composer */}
-          <div className="mt-1">
+          <div className="mt-1 pb-[env(safe-area-inset-bottom)]">
             <ChatInput
               value={input}
               onChange={setInput}
