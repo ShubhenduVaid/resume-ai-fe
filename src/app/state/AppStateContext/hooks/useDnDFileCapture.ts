@@ -24,7 +24,8 @@ export function useDnDFileCapture({
   const dragCounterRef = useRef(0);
 
   useEffect(() => {
-    if (!enabled || !user) return;
+    // Enable drag-and-drop globally when enabled, regardless of auth state
+    if (!enabled) return;
 
     const handleDragEnter = (e: DragEvent) => {
       e.preventDefault();
@@ -82,7 +83,6 @@ export function useDnDFileCapture({
     };
   }, [
     enabled,
-    user,
     onFiles,
     onFocusChatInput,
     setIsDragActive,

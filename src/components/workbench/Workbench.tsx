@@ -432,6 +432,19 @@ export function Workbench() {
                   openImmediateFilePicker();
                 }
               }}
+              onStartChatting={() => {
+                // Open the chat sidebar if needed, then focus the input
+                if (isMobile || sidebarWidth === 0) {
+                  if (sidebarCollapsed) setSidebarCollapsed(false);
+                  // Wait for overlay to mount before focusing
+                  setTimeout(() => focusChat(), 150);
+                } else if (sidebarCollapsed) {
+                  setSidebarCollapsed(false);
+                  requestAnimationFrame(() => focusChat());
+                } else {
+                  focusChat();
+                }
+              }}
             />
           </div>
           {/* Inline MiniChat footer (mobile only) */}
@@ -439,6 +452,8 @@ export function Workbench() {
             {(isMobile || sidebarWidth === 0) && <MiniChat />}
           </div>
         </div>
+
+        {/* Close h-[calc(100vh-56px)] container */}
       </div>
 
       {/* Login Modal */}
@@ -450,7 +465,7 @@ export function Workbench() {
       />
 
       {/* Overlay for drag-and-drop */}
-      {isDragActive && user && (
+      {isDragActive && (
         <div className="pointer-events-none fixed inset-0 bg-blue-500/10 border-4 border-dashed border-blue-400" />
       )}
 

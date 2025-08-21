@@ -83,6 +83,7 @@ export function MessagesList({
                     Click to attach, or drag & drop
                   </p>
                 </button>
+                {/* LinkedIn import hint disabled pending approval
                 <div className="bg-gray-50 rounded-lg p-3">
                   <p className="text-sm text-gray-700 mb-1">
                     🔗 <strong>Import LinkedIn:</strong>
@@ -91,6 +92,7 @@ export function MessagesList({
                     Use the attachment button to import from LinkedIn
                   </p>
                 </div>
+                */}
               </div>
             </div>
           )}

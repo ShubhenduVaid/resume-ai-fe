@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Button } from './ui/button';
-import { Upload, FileText, Linkedin, Loader2 } from 'lucide-react';
+import { Upload, FileText, Loader2 } from 'lucide-react';
 
 interface FileUploadProps {
   onFileUpload: (content: string, filename: string) => void;
@@ -37,8 +37,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
 **Note**: PDF text extraction is not available in this demo. Please:
 1. Copy and paste your resume content directly into the editor, or
-2. Upload a .txt or .docx file instead, or  
-3. Use the LinkedIn import option below
+2. Upload a .txt or .docx file instead
 
 ## Professional Summary
 [Add your professional summary here]
@@ -72,7 +71,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       console.error('Error processing file:', error);
       // Fallback for error cases
       onFileUpload(
-        `# Resume\n\n*Error processing "${file.name}"*\n\nPlease try:\n- Copying and pasting your content directly\n- Using a different file format (.txt, .docx)\n- Using the LinkedIn import option`,
+        `# Resume\n\n*Error processing "${file.name}"*\n\nPlease try:\n- Copying and pasting your content directly\n- Using a different file format (.txt, .docx)`,
         file.name,
       );
     } finally {
@@ -86,145 +85,13 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     }
   };
 
-  const handleLinkedInImport = async () => {
-    setIsProcessing(true);
-    setProcessingType('linkedin');
-
-    try {
-      // Simulate LinkedIn API call with realistic delay
-      await new Promise((resolve) => setTimeout(resolve, 2500));
-
-      const linkedinData = generateMockLinkedInData();
-      onFileUpload(linkedinData, 'LinkedIn Profile');
-    } catch (error) {
-      console.error('Error importing from LinkedIn:', error);
-      onFileUpload(
-        '# Resume\n\n*Error importing from LinkedIn*\n\nPlease try again or add your information manually.',
-        'LinkedIn Error',
-      );
-    } finally {
-      setIsProcessing(false);
-      setProcessingType(null);
-    }
-  };
-
-  const generateMockLinkedInData = (): string => {
-    return `# Sarah Chen
-
-**Senior Product Manager** • Google
-📍 San Francisco, CA • 📧 sarah.chen@email.com • 📱 (555) 987-6543
-[linkedin.com/in/sarahchen](https://linkedin.com/in/sarahchen) • [github.com/sarahchen](https://github.com/sarahchen)
-
----
-
-## Professional Summary
-
-Results-driven Senior Product Manager with 7+ years of experience leading cross-functional teams to deliver innovative products that serve millions of users. Expertise in product strategy, user research, data analysis, and agile development. Proven track record of launching successful products that drive significant business growth and user engagement.
-
----
-
-## Professional Experience
-
-### Google - Senior Product Manager
-**March 2021 - Present** | San Francisco, CA
-
-- Lead product strategy for Google Photos AI features, serving 1B+ monthly active users
-- Launched 5 major AI-powered features resulting in 25% increase in user engagement
-- Collaborate with engineering, design, and research teams across 3 time zones
-- Define product roadmap and KPIs, managing $50M annual budget
-- **Key Achievement**: Led initiative that increased photo sharing by 40% and retention by 18%
-
-### Meta - Product Manager
-**June 2019 - February 2021** | Menlo Park, CA
-
-- Managed Instagram Shopping product suite with 200M+ monthly users
-- Partnered with business teams to define go-to-market strategy for new commerce features
-- Conducted user research and A/B testing to optimize conversion funnel
-- Achieved 35% increase in merchant onboarding and 28% boost in shopping engagement
-- Coordinated product launches across iOS, Android, and web platforms
-
-### Airbnb - Associate Product Manager
-**August 2017 - May 2019** | San Francisco, CA
-
-- Worked on host onboarding experience, improving conversion rate by 22%
-- Analyzed user behavior data to identify product improvement opportunities
-- Collaborated with international teams to localize product features for global markets
-- Managed product requirements and sprint planning for engineering team of 8 developers
-
-### Startup Co. - Product Marketing Manager
-**June 2016 - July 2017** | San Francisco, CA
-
-- Launched go-to-market strategy for B2B SaaS platform targeting mid-market companies
-- Created product positioning and messaging that increased trial-to-paid conversion by 45%
-- Developed competitive intelligence reports and customer success case studies
-- Managed product marketing budget of $2M across digital and field marketing campaigns
-
----
-
-## Education
-
-**Master of Business Administration (MBA)**
-Stanford Graduate School of Business | 2014 - 2016
-- Concentration: Technology and Innovation Management
-- Relevant Coursework: Product Management, Data Analytics, Digital Strategy
-
-**Bachelor of Science in Computer Science**
-University of California, Berkeley | 2010 - 2014
-- Minor in Business Administration
-- Graduated Magna Cum Laude, GPA: 3.8/4.0
-
----
-
-## Core Competencies
-
-- **Product Strategy & Vision**: Roadmap planning, competitive analysis, market research
-- **Data & Analytics**: SQL, Python, Tableau, Google Analytics, A/B testing, statistical analysis
-- **Technical Skills**: API design, web technologies, mobile development, cloud platforms
-- **Leadership & Collaboration**: Cross-functional team leadership, stakeholder management, agile methodologies
-- **Business Acumen**: P&L management, budget planning, go-to-market strategy, pricing strategy
-
----
-
-## Certifications & Training
-
-- **Product Management Certificate** - Stanford Continuing Studies (2020)
-- **Google Analytics Certified** - Google (2021)
-- **Certified Scrum Product Owner (CSPO)** - Scrum Alliance (2019)
-- **SQL for Data Science** - Coursera/University of California, Davis (2018)
-
----
-
-## Key Projects & Achievements
-
-### AI-Powered Photo Organization (Google Photos)
-- **Challenge**: Users struggled to find specific photos in large libraries
-- **Solution**: Led development of smart album creation and photo search features
-- **Impact**: 60% improvement in photo discoverability, 30% increase in app usage time
-
-### Instagram Shopping Discovery
-- **Challenge**: Low product discovery rates on Instagram platform
-- **Solution**: Designed personalized shopping feed using ML recommendations
-- **Impact**: 85% increase in product clicks, $500M+ in attributed revenue
-
-### Global Host Experience Optimization (Airbnb)
-- **Challenge**: Inconsistent host onboarding across international markets
-- **Solution**: Redesigned onboarding flow with localized content and support
-- **Impact**: 22% increase in host conversion, expansion to 15 new countries
-
----
-
-## Awards & Recognition
-
-- **Product Excellence Award** - Google (2022, 2023)
-- **Top Performer Award** - Meta (2020)
-- **Innovation Award** - Airbnb (2018)
-- **Dean's List** - UC Berkeley (2012, 2013, 2014)
-
----
-
-*Imported from LinkedIn Profile*
-*Please review and edit as needed*`;
-  };
+  /*
+    LinkedIn import feature is disabled pending approval.
+    The previous LinkedIn mock import helpers were removed to avoid unused code/lint errors.
+    To restore later, reintroduce:
+      - handleLinkedInImport()
+      - generateMockLinkedInData()
+  */
 
   const convertToMarkdown = (content: string, file: File): string => {
     if (file.name.endsWith('.md')) {
@@ -408,7 +275,7 @@ University of California, Berkeley | 2010 - 2014
         </p>
       </div>
 
-      {/* LinkedIn Import Option */}
+      {/* LinkedIn Import Option disabled pending approval
       <div className="border-2 border-dashed border-blue-100 rounded-lg p-4 text-center hover:border-blue-200 transition-colors bg-blue-50/30">
         <Linkedin className="w-8 h-8 text-blue-600 mx-auto mb-2" />
         <p className="text-sm text-gray-600 mb-3">
@@ -437,6 +304,7 @@ University of California, Berkeley | 2010 - 2014
           Generates sample professional resume
         </p>
       </div>
+      */}
 
       <input
         ref={fileInputRef}

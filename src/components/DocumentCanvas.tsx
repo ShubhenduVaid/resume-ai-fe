@@ -8,7 +8,6 @@ import {
   FileText,
   MessageSquareText,
   Upload,
-  Linkedin,
   Sparkles,
   Edit3,
 } from 'lucide-react';
@@ -25,6 +24,7 @@ interface DocumentCanvasProps {
   onStartFromScratch?: () => void;
   footerSlot?: React.ReactNode;
   onClickImportResume?: () => void;
+  onStartChatting?: () => void;
 }
 
 export function DocumentCanvas({
@@ -37,6 +37,7 @@ export function DocumentCanvas({
   onStartFromScratch,
   footerSlot,
   onClickImportResume,
+  onStartChatting,
 }: DocumentCanvasProps) {
   const extensions = useMemo(
     () => [
@@ -98,7 +99,11 @@ export function DocumentCanvas({
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+              <button
+                type="button"
+                onClick={onStartChatting}
+                className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors w-full focus:outline-none"
+              >
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <MessageSquareText className="w-4 h-4 text-blue-600" />
                 </div>
@@ -109,7 +114,7 @@ export function DocumentCanvas({
                   Tell the AI about your experience and it will create your
                   resume
                 </p>
-              </div>
+              </button>
 
               <button
                 type="button"
@@ -127,6 +132,7 @@ export function DocumentCanvas({
                 </p>
               </button>
 
+              {/* LinkedIn import card disabled pending approval
               <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <Linkedin className="w-4 h-4 text-blue-600" />
@@ -138,6 +144,7 @@ export function DocumentCanvas({
                   Use the upload button to import from LinkedIn
                 </p>
               </div>
+              */}
             </div>
 
             {!isMobile && (
