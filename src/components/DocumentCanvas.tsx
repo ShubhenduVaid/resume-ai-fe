@@ -98,7 +98,26 @@ export function DocumentCanvas({
               resume.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+              <button
+                type="button"
+                onClick={onClickImportResume}
+                className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors w-full focus:outline-none"
+              >
+                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Upload className="w-4 h-4 text-green-600" />
+                </div>
+                <p className="text-xs font-medium text-blue-600 mb-1">
+                  Recommended
+                </p>
+                <h3 className="font-medium text-gray-900 mb-1">
+                  Import Resume
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Drag & drop your existing resume to get started
+                </p>
+              </button>
+
               <button
                 type="button"
                 onClick={onStartChatting}
@@ -113,22 +132,6 @@ export function DocumentCanvas({
                 <p className="text-sm text-gray-600">
                   Tell the AI about your experience and it will create your
                   resume
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={onClickImportResume}
-                className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors w-full focus:outline-none"
-              >
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <Upload className="w-4 h-4 text-green-600" />
-                </div>
-                <h3 className="font-medium text-gray-900 mb-1">
-                  Import Resume
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Drag & drop your existing resume to get started
                 </p>
               </button>
 

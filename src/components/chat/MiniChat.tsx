@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Markdown } from '@/components/markdown/Markdown';
 import { unwrapSingleFencedBlock } from '@/components/markdown/utils';
 import { MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { toast } from '@/components/ui/sonner';
+import { validateFiles, formatBytes } from '@/features/files/attachments';
 
 /**
  * MiniChat (mobile only)
@@ -23,6 +25,9 @@ export function MiniChat() {
     setSidebarCollapsed,
     isMobile,
     focusChat,
+    pendingFiles,
+    setPendingFiles,
+    uploadsCfg,
   } = useAppState();
 
   // Hooks must be called unconditionally
@@ -40,10 +45,63 @@ export function MiniChat() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const msg = input.trim();
-    if (!msg || isOutOfCredits || isProcessing) return;
-    handleChatSubmit(msg, []);
+    // Allow sending when there are pending files even if message is empty
+    const canSend =
+      (msg.length > 0 || pendingFiles.length > 0) &&
+      !isOutOfCredits &&
+      !isProcessing;
+    if (!canSend) return;
+    handleChatSubmit(msg || 'Imported files', pendingFiles);
     setInput('');
   };
+
+  // Stage files selected via paperclip
+  const onPickFiles = React.useCallback(
+    async (files: File[]) => {
+      const cfg =
+        uploadsCfg ||
+        ({
+          maxFiles: 1,
+          maxBytes: 1 * 1024 * 1024,
+          allowedMime: [
+            'application/pdf',
+            'text/plain',
+            'text/markdown',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword',
+          ],
+          accept:
+            '.pdf,.txt,.md,.doc,.docx,application/pdf,text/plain,text/markdown,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword',
+        } as const);
+      const { accepted, rejected } = validateFiles(files, cfg as any);
+      for (const r of rejected) {
+        if (r.reason === 'not_allowed') {
+          toast.error(`Unsupported file type: ${r.file.name}`);
+        } else if (r.reason === 'too_large') {
+          toast.error(
+            `File too large: ${r.file.name} (${formatBytes(r.file.size)}). Max ${formatBytes(
+              cfg.maxBytes,
+            )}`,
+          );
+        }
+      }
+      if (accepted.length === 0) return;
+      setPendingFiles((prev) => {
+        const newAttachments = accepted.map((f) => ({
+          id: Date.now().toString() + Math.random().toString(36).slice(2),
+          name: f.name,
+          size: f.size,
+          type: f.type,
+          file: f,
+        }));
+        if (cfg.maxFiles <= 1) return newAttachments.slice(0, 1);
+        return [...prev, ...newAttachments].slice(0, cfg.maxFiles);
+      });
+      // Keep focus on the input after picking
+      focusChat?.();
+    },
+    [uploadsCfg, setPendingFiles, focusChat],
+  );
 
   // Inline layout: no fixed footer or visualViewport hacks
   const [minimized, setMinimized] = useState(false);
@@ -155,13 +213,13 @@ export function MiniChat() {
               isOutOfCredits={isOutOfCredits}
               isProcessing={isProcessing}
               isMobile
-              pendingFilesCount={0}
+              pendingFilesCount={pendingFiles.length}
               messagesCount={chatHistory.length}
               chatInputRef={chatInputRef}
               onToggleUpload={() => {}}
               showFileUpload={false}
               placeholder="Ask AI about your resume…"
-              hideUploadButton
+              onPickFiles={onPickFiles}
               compact
             />
           </div>

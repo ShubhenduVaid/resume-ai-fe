@@ -60,19 +60,15 @@ export function MessagesList({
                 edit, and improve your resume.
               </p>
               <div className="space-y-3 text-left max-w-xs mx-auto">
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-sm text-gray-700 mb-1">
-                    💬 <strong>Start chatting:</strong>
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    &quot;Help me create a resume for software engineering&quot;
-                  </p>
-                </div>
+                {/* Import first (nudge) */}
                 <button
                   type="button"
                   onClick={onClickImportResume}
                   className="bg-gray-50 rounded-lg p-3 text-left w-full border border-transparent hover:border-blue-300 hover:bg-blue-50 transition-colors"
                 >
+                  <p className="text-xs font-medium text-blue-600 mb-1">
+                    Recommended
+                  </p>
                   <p className="text-sm text-gray-700 mb-1 flex items-center gap-2">
                     <span role="img" aria-label="document">
                       📄
@@ -83,6 +79,15 @@ export function MessagesList({
                     Click to attach, or drag & drop
                   </p>
                 </button>
+                {/* Chat hint */}
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-sm text-gray-700 mb-1">
+                    💬 <strong>Start chatting:</strong>
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    &quot;Help me create a resume for software engineering&quot;
+                  </p>
+                </div>
                 {/* LinkedIn import hint disabled pending approval
                 <div className="bg-gray-50 rounded-lg p-3">
                   <p className="text-sm text-gray-700 mb-1">

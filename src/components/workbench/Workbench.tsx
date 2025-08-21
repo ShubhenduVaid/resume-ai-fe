@@ -142,9 +142,22 @@ export function Workbench() {
         }
         return [...prev, ...newAttachments].slice(0, cfg.maxFiles);
       });
-      focusChat();
+      // After staging files, ensure the chat UI is visible and focused
+      if (isMobile || sidebarWidth === 0 || sidebarCollapsed) {
+        setSidebarCollapsed(false);
+        setTimeout(() => focusChat(), 150);
+      } else {
+        focusChat();
+      }
     },
-    [setPendingFiles, focusChat],
+    [
+      setPendingFiles,
+      focusChat,
+      isMobile,
+      sidebarWidth,
+      sidebarCollapsed,
+      setSidebarCollapsed,
+    ],
   );
 
   const startResize = (e: React.MouseEvent) => {
@@ -414,11 +427,18 @@ export function Workbench() {
               hasMessages={chatHistory.length > 0}
               onStartFromScratch={() => setMarkdownContent('# Your Name')}
               onClickImportResume={() => {
+                // On mobile/iOS, prefer an immediate, dedicated picker for reliability
+                if (isMobile || sidebarWidth === 0) {
+                  openImmediateFilePicker();
+                  return;
+                }
+                // If ChatSidebar is mounted, use its picker so files land in the chat flow
                 if (chatOpenPickerRef.current) {
-                  // If ChatSidebar/ChatInput is mounted, use its picker
                   chatOpenPickerRef.current();
-                } else if (localPickerRef.current) {
-                  // Fallback to hidden input
+                  return;
+                }
+                // Desktop fallback to hidden input
+                if (localPickerRef.current) {
                   const input = localPickerRef.current;
                   try {
                     typeof (input as any).showPicker === 'function'
@@ -428,7 +448,6 @@ export function Workbench() {
                     input.click();
                   }
                 } else {
-                  // Ultimate fallback: create a temporary input and click immediately
                   openImmediateFilePicker();
                 }
               }}
@@ -451,8 +470,9 @@ export function Workbench() {
           <div className="shrink-0">
             {(isMobile || sidebarWidth === 0) && <MiniChat />}
           </div>
-        </div>
 
+          {/* Close document area container */}
+        </div>
         {/* Close h-[calc(100vh-56px)] container */}
       </div>
 
