@@ -13,6 +13,7 @@ export interface MessagesListProps {
   onClickImportResume?: () => void;
   isMobile?: boolean;
   onPreviewResumeUpdates?: () => void;
+  onInsertSuggestion?: (text: string) => void;
 }
 
 export function MessagesList({
@@ -25,6 +26,7 @@ export function MessagesList({
   onClickImportResume,
   isMobile,
   onPreviewResumeUpdates,
+  onInsertSuggestion,
 }: MessagesListProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -113,6 +115,7 @@ export function MessagesList({
                 currentContent={currentContent}
                 isMobile={isMobile}
                 onPreviewResumeUpdates={onPreviewResumeUpdates}
+                onInsertSuggestion={onInsertSuggestion}
               />
             ))}
           </div>

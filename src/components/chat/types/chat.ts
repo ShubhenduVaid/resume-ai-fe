@@ -16,6 +16,8 @@ export interface ChatMessage {
   resumeSnapshot?: string;
   // Indicates the assistant updated the resume for this message
   resumeUpdated?: boolean;
+  // Optional AI-suggested next actions (0-3 strings). Clicking inserts into input.
+  suggestedActions?: string[];
 }
 
 export interface ChatSidebarProps {

@@ -14,6 +14,7 @@ export interface MessageItemProps {
   currentContent?: string;
   isMobile?: boolean;
   onPreviewResumeUpdates?: () => void;
+  onInsertSuggestion?: (text: string) => void;
 }
 
 function MessageItemComponent({
@@ -24,6 +25,7 @@ function MessageItemComponent({
   currentContent,
   isMobile,
   onPreviewResumeUpdates,
+  onInsertSuggestion,
 }: MessageItemProps) {
   return (
     <div className="group">
@@ -78,6 +80,28 @@ function MessageItemComponent({
                 </button>
               </div>
             )}
+            {/* Suggested Actions (chips) */}
+            {message.type !== 'user' &&
+              Array.isArray(message.suggestedActions) &&
+              message.suggestedActions.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {message.suggestedActions.slice(0, 3).map((s, idx) => (
+                    <button
+                      key={`${message.id}-sugg-${idx}`}
+                      type="button"
+                      onClick={() => onInsertSuggestion?.(s)}
+                      className={`text-xs rounded-full px-3 py-1 border ${
+                        message.type === 'user'
+                          ? 'bg-blue-500/10 border-blue-300 text-white hover:bg-blue-500/20'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300 hover:text-blue-700'
+                      }`}
+                      title="Insert suggestion into message box"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
           </div>
 
           <div

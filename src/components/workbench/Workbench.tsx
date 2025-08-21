@@ -470,14 +470,6 @@ export function Workbench() {
           <div className="shrink-0">
             {(isMobile || sidebarWidth === 0) && (
               <>
-                {/* Invisible spacer to reserve space for the fixed MiniChat bar */}
-                {!sidebarCollapsed && null}
-                {sidebarCollapsed && (
-                  <div
-                    className="h-[88px] pb-[env(safe-area-inset-bottom)]"
-                    aria-hidden="true"
-                  />
-                )}
                 <MiniChat />
               </>
             )}

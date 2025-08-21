@@ -178,6 +178,12 @@ export function useChat(user: User | null): ChatState {
               resumeUpdated:
                 (typeof hasUpdates === 'boolean' ? hasUpdates : undefined) ??
                 updatedMarkdown !== markdownContent,
+              suggestedActions:
+                (result as any).suggestedActions &&
+                Array.isArray((result as any).suggestedActions) &&
+                (result as any).suggestedActions.length > 0
+                  ? (result as any).suggestedActions
+                  : undefined,
             },
           ]);
         } catch (error) {

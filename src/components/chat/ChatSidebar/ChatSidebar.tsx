@@ -71,6 +71,17 @@ export function ChatSidebar({
         onClickImportResume={() => openPickerRef.current?.()}
         isMobile={isMobile}
         onPreviewResumeUpdates={onPreviewResumeUpdates}
+        onInsertSuggestion={(text) => {
+          // Insert suggestion into composer without sending
+          setInputMessage((prev) => {
+            const p = prev || '';
+            if (!p.trim()) return text;
+            // Append with a space if needed
+            return p.endsWith(' ') ? p + text : p + ' ' + text;
+          });
+          // Focus input for quick edits
+          chatInputRef?.current?.focus();
+        }}
       />
 
       {/* Pending Files Preview */}

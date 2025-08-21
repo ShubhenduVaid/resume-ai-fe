@@ -52,8 +52,8 @@ export function DocumentCanvas({
           padding: isMobile ? '20px 16px' : '32px 40px',
           lineHeight: '1.6',
           minHeight: '100%',
-          // No extra bottom padding; MiniChat is part of layout
-          paddingBottom: null,
+          // Reserve space for MiniChat on mobile using CSS var (0px when absent)
+          paddingBottom: isMobile ? 'var(--minichat-height, 0px)' : null,
         },
         '.cm-focused': {
           outline: 'none',
@@ -242,6 +242,11 @@ export function DocumentCanvas({
         <ScrollArea className="h-full">
           <div
             className={`mx-auto ${isMobile ? 'px-4 py-6' : 'px-8 py-12 max-w-4xl'}`}
+            style={{
+              paddingBottom: isMobile
+                ? 'var(--minichat-height, 0px)'
+                : undefined,
+            }}
           >
             {/* Document Paper Effect with PDF data attribute */}
             <div

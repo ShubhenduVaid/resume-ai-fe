@@ -18,6 +18,7 @@ interface ChatResponse {
   };
   output_resume_markdown: string;
   credits?: number;
+  suggested_actions?: string[];
 }
 
 interface RewriteResponse {

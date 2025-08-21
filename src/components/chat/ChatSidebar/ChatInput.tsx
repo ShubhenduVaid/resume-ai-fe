@@ -113,6 +113,45 @@ export function ChatInput({
     }
   }, [chatInputRef]);
 
+  // iOS Safari: even at 16px, some combinations still trigger page zoom.
+  // As a defensive measure, temporarily disable zoom while the textarea is focused.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (
+      !el ||
+      typeof document === 'undefined' ||
+      typeof navigator === 'undefined'
+    )
+      return;
+
+    const isiOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+    if (!isiOS) return;
+
+    const toggleViewportZoom = (disable: boolean) => {
+      const meta = document.querySelector('meta[name="viewport"]');
+      if (!meta) return;
+      const content = meta.getAttribute('content') || '';
+      const cleaned = content
+        .replace(/,\s*maximum-scale=[^,\s]+/g, '')
+        .replace(/,\s*user-scalable=[^,\s]+/g, '');
+      const updated = disable
+        ? `${cleaned}, maximum-scale=1, user-scalable=no`
+        : `${cleaned}, user-scalable=yes`;
+      meta.setAttribute('content', updated);
+    };
+
+    const onFocus = () => toggleViewportZoom(true);
+    const onBlur = () => toggleViewportZoom(false);
+
+    el.addEventListener('focus', onFocus);
+    el.addEventListener('blur', onBlur);
+    return () => {
+      el.removeEventListener('focus', onFocus);
+      el.removeEventListener('blur', onBlur);
+      onBlur();
+    };
+  }, []);
+
   const containerClasses = [
     compact
       ? 'px-1 py-1 border-t-0 bg-transparent'

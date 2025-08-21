@@ -14,8 +14,8 @@ export interface ChatApiResult {
   responseMessage: string;
   hasUpdates?: boolean;
   credits?: number;
+  suggestedActions?: string[];
 }
-
 export async function callPrimaryApi(
   message: string,
   markdownContent: string,
@@ -34,6 +34,11 @@ export async function callPrimaryApi(
   const updatedMarkdown = hasUpdates
     ? data.output_resume_markdown || markdownContent
     : markdownContent;
+  const suggestedActions = Array.isArray(data.suggested_actions)
+    ? data.suggested_actions
+        .filter((s: any) => typeof s === 'string')
+        .slice(0, 3)
+    : undefined;
   try {
     if (typeof window !== 'undefined' && typeof data.credits === 'number') {
       localStorage.setItem('creditsRemaining', String(data.credits));
@@ -44,5 +49,6 @@ export async function callPrimaryApi(
     responseMessage,
     hasUpdates,
     credits: data.credits,
+    suggestedActions,
   };
 }

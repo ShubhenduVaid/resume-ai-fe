@@ -191,7 +191,7 @@ export function DocumentHeader({
               size="sm"
               onClick={handleExportPDF}
               disabled={isExporting}
-              className="px-2 md:px-3 py-1.5 h-auto border-gray-200 text-gray-700 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-50 flex-shrink-0"
+              className="hidden md:inline-flex px-2 md:px-3 py-1.5 h-auto border-gray-200 text-gray-700 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-50 flex-shrink-0"
               aria-label="Download PDF"
               title="Download PDF"
             >
@@ -203,32 +203,48 @@ export function DocumentHeader({
               <span className="hidden xl:inline ml-1.5">Download PDF</span>
             </Button>
 
-            {/* Credits - Always visible */}
-            <Credits
-              creditsRemaining={creditsRemaining}
-              onBuyCredits={onBuyCredits}
-              variant="header"
-              showLabel={false}
-              open={creditsDialogOpen}
-              onOpenChange={onCreditsDialogOpenChange}
-            />
+            {/* Credits: single instance. Visible on mobile only when out of credits; always visible on md+. */}
+            <div
+              className={`${creditsRemaining === 0 ? 'inline-flex' : 'hidden'} md:flex`}
+            >
+              <Credits
+                creditsRemaining={creditsRemaining}
+                onBuyCredits={onBuyCredits}
+                variant="header"
+                showLabel={creditsRemaining === 0}
+                open={creditsDialogOpen}
+                onOpenChange={onCreditsDialogOpenChange}
+              />
+            </div>
 
             {/* Account */}
             {user && !isGuestSession ? (
-              <UserMenu user={user} onLogout={onLogout} />
+              <div className="hidden md:block">
+                <UserMenu user={user} onLogout={onLogout} />
+              </div>
             ) : (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={onOpenLogin}
-                className="px-2 md:px-3 py-1.5 h-auto border-gray-200 text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                className="hidden md:inline-flex px-2 md:px-3 py-1.5 h-auto border-gray-200 text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               >
                 Sign in
               </Button>
             )}
 
             {/* Overflow Menu */}
-            <OverflowMenu content={content} />
+            <OverflowMenu
+              content={content}
+              onDownloadPDF={handleExportPDF}
+              creditsRemaining={creditsRemaining}
+              onOpenCreditsDialog={() => onCreditsDialogOpenChange?.(true)}
+              onBuyCredits={onBuyCredits}
+              user={user}
+              onOpenLogin={onOpenLogin}
+              onLogout={onLogout}
+              isGuestSession={isGuestSession}
+            />
           </div>
         </div>
       </div>
